@@ -68,7 +68,7 @@ const Hero = () => {
               <Button 
                 variant="outline-light" 
                 size="lg" 
-                href="/portfolio/CV Mathlouthi Bassem.pdf"
+                href="/portfolio/CV Bassem Mathlouthi.pdf"
                 target="_blank"
                 className="px-4 py-2 fw-bold"
               >
