@@ -12,7 +12,7 @@ const Skills = () => {
   ];
 
   const technologies = [
-    'React', 'Angular','Django', 'Synfony', 'MySql', 'PostgreSQL', 
+    'React', 'Angular','Django', 'Express.js', 'MySql', 'PostgreSQL', 
     'TypeScript', 'Bootstrap', 'JavaScript', 'Java', 'Php', 
     'Machine Learning', 'Intelligence Artificielle', 'Flutter', 'Kotling'
   ];

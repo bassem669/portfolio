@@ -68,7 +68,7 @@ const Hero = () => {
               <Button 
                 variant="outline-light" 
                 size="lg" 
-                href="/portfolio/CV Bassem Mathlouthi.pdf"
+                href="/portfolio/CVBassemMathlouthi.pdf"
                 target="_blank"
                 className="px-4 py-2 fw-bold"
               >
@@ -81,7 +81,7 @@ const Hero = () => {
               <a href="https://github.com/bassem669" className="text-light fs-4">
                 <i className="fab fa-github"></i>
               </a>
-              <a href="www.linkedin.com/in/bassem-mathlouthi-3abab6362" className="text-light fs-4">
+              <a href="https://www.linkedin.com/in/bassem-mathlouthi-3abab6362/" className="text-light fs-4">
                 <i className="fab fa-linkedin"></i>
               </a>
               <a href="https://www.facebook.com/bassam.mathlouthi.1" className="text-light fs-4">
