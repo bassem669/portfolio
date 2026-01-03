@@ -295,7 +295,7 @@ const Hero = () => {
                   </Button>
                   
                   <Button
-                    href="/portfolio/assets/Bassem_Mathlouthi_CV.pdf"
+                    href="/portfolio/Bassem_Mathlouthi_CV.pdf"
                     target="_blank"
                     variant="outline-light"
                     className={`rounded-pill ${isMobile ? 'px-3 py-2' : 'px-4 py-3'}`}
