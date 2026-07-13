@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
-import emailjs from '@emailjs/browser';
+import useScreenSize from '../hooks/useScreenSize';
 
 const Contact = () => {
+  const { isMobile, isTablet } = useScreenSize();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,27 +13,6 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertType, setAlertType] = useState('success');
   const [alertMessage, setAlertMessage] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768;
-      const tablet = window.innerWidth >= 768 && window.innerWidth < 992;
-      setIsMobile(mobile);
-      setIsTablet(tablet);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    // Initialiser EmailJS si nécessaire
-    emailjs.init('GVnxtFq7L2THt4Y0o');
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-    };
-  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,26 +23,32 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      await emailjs.send(
-        'service_2rbe47i',
-        'template_w34gsll',
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_email: 'Bassemmathlouthi05@gmail.com',
-          reply_to: formData.email
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
         },
-        'GVnxtFq7L2THt4Y0o'
-      );
+        body: JSON.stringify({
+          access_key: process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || "a951bd95-b2cb-402e-9b4b-eb832864090b",
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          subject: `Nouveau message de Portfolio de ${formData.name}`
+        })
+      });
 
-      setAlertType('success');
-      setAlertMessage('Message envoyé avec succès ! Je vous répondrai dans les plus brefs délais.');
-      setShowAlert(true);
-      setFormData({ name: '', email: '', message: '' });
+      const result = await response.json();
 
-      // Cacher l'alerte après 5 secondes
-      setTimeout(() => setShowAlert(false), 5000);
+      if (result.success) {
+        setAlertType('success');
+        setAlertMessage('Message envoyé avec succès ! Je vous répondrai dans les plus brefs délais.');
+        setShowAlert(true);
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setShowAlert(false), 5000);
+      } else {
+        throw new Error(result.message || "Une erreur est survenue.");
+      }
 
     } catch (error) {
       console.error('Erreur en envoyant le mail:', error);
@@ -73,6 +59,7 @@ const Contact = () => {
       setIsSubmitting(false);
     }
   };
+
 
   const contactInfo = [
     {
@@ -138,11 +125,10 @@ const Contact = () => {
         <Row className="mb-4 mb-md-5">
           <Col>
             <div className="text-center">
-              <h2 className={`text-white mb-3 ${isMobile ? 'h3' : 'section-title'}`} 
+              <h2 className={`text-white mb-3 ${isMobile ? 'h3' : 'section-title'}`}
                   style={isMobile ? { fontSize: '1.75rem' } : {}}>
                 Travaillons <span className="text-gradient">Ensemble</span>
               </h2>
-
               <p className="text-light opacity-75" style={{
                 maxWidth: '700px',
                 margin: '0 auto',
@@ -173,8 +159,7 @@ const Contact = () => {
                 {showAlert && (
                   <Alert
                     variant={alertType}
-                    className={`mb-3 mb-md-4 border-0 d-flex align-items-center ${alertType === 'success' ? 'bg-success' : 'bg-danger'
-                      }`}
+                    className={`mb-3 mb-md-4 border-0 d-flex align-items-center ${alertType === 'success' ? 'bg-success' : 'bg-danger'}`}
                     style={{
                       background: alertType === 'success'
                         ? 'linear-gradient(45deg, rgba(16, 185, 129, 0.9), rgba(6, 182, 212, 0.9))'
@@ -187,8 +172,7 @@ const Contact = () => {
                     onClose={() => setShowAlert(false)}
                     dismissible
                   >
-                    <i className={`fas fa-${alertType === 'success' ? 'check-circle' : 'exclamation-circle'
-                      } ${isMobile ? 'me-2' : 'me-3'} ${isMobile ? 'fa-sm' : 'fa-lg'}`}></i>
+                    <i className={`fas fa-${alertType === 'success' ? 'check-circle' : 'exclamation-circle'} ${isMobile ? 'me-2' : 'me-3'} ${isMobile ? 'fa-sm' : 'fa-lg'}`}></i>
                     <span className="flex-grow-1" style={{ fontSize: isMobile ? '0.875rem' : '1rem' }}>
                       {alertMessage}
                     </span>
@@ -341,7 +325,7 @@ const Contact = () => {
                           </>
                         ) : (
                           <>
-                            <i className={`fas fa-paper-plane ${isMobile ? 'me-2' : 'me-2'}`}></i>
+                            <i className="fas fa-paper-plane me-2"></i>
                             {isMobile ? 'Envoyer' : 'Envoyer le message'}
                           </>
                         )}
@@ -369,7 +353,7 @@ const Contact = () => {
                   Informations de contact
                 </h4>
 
-                <p className="text-light opacity-75 mb-3 mb-md-4" style={{ 
+                <p className="text-light opacity-75 mb-3 mb-md-4" style={{
                   lineHeight: '1.6',
                   fontSize: isMobile ? '0.9rem' : '1rem'
                 }}>
@@ -381,8 +365,7 @@ const Contact = () => {
                   {contactInfo.map((info, index) => (
                     <div
                       key={index}
-                      className={`contact-item p-2 p-md-3 mb-2 mb-md-3 rounded-3 d-flex align-items-start ${info.link ? 'cursor-pointer' : ''
-                        }`}
+                      className={`contact-item p-2 p-md-3 mb-2 mb-md-3 rounded-3 d-flex align-items-start ${info.link ? 'cursor-pointer' : ''}`}
                       style={{
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -404,14 +387,10 @@ const Contact = () => {
                         }
                       }}
                       onTouchStart={(e) => {
-                        if (isMobile && info.link) {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                        }
+                        if (isMobile && info.link) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
                       }}
                       onTouchEnd={(e) => {
-                        if (isMobile && info.link) {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                        }
+                        if (isMobile && info.link) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
                       }}
                     >
                       <div className={`rounded-circle ${isMobile ? 'p-1 me-2' : 'p-2 me-3'} d-flex align-items-center justify-content-center`}
@@ -428,7 +407,7 @@ const Contact = () => {
                         <h6 className={`text-white mb-${isMobile ? '0' : '1'} ${isMobile ? 'small' : ''}`}>
                           {info.title}
                         </h6>
-                        <p className="text-light opacity-90 mb-0" style={{ 
+                        <p className="text-light opacity-90 mb-0" style={{
                           fontSize: isMobile ? '0.8rem' : '0.9rem',
                           lineHeight: '1.4'
                         }}>
@@ -441,225 +420,61 @@ const Contact = () => {
 
                 {/* Social Links */}
                 <div className="mt-3 mt-md-4 pt-3 border-top border-secondary">
-                  <h6 className={`text-white mb-${isMobile ? '2' : '3'} ${isMobile ? 'h6' : ''}`}>
+                  <h6 className={`text-white mb-${isMobile ? '2' : '3'}`}>
                     <i className="fas fa-share-alt me-2"></i>
                     Suivez-moi
                   </h6>
                   <div className="d-flex gap-2 gap-md-3">
-                    <SocialLink
-                      icon="fab fa-github"
-                      link="https://github.com/bassem669"
-                      color="#333"
-                      title="GitHub"
-                      isMobile={isMobile}
-                    />
-                    <SocialLink
-                      icon="fab fa-linkedin"
-                      link="https://www.linkedin.com/in/bassem-mathlouthi-3abab6362/"
-                      color="#0077b5"
-                      title="LinkedIn"
-                      isMobile={isMobile}
-                    />
-                    <SocialLink
-                      icon="fab fa-facebook"
-                      link="https://www.facebook.com/bassam.mathlouthi.1"
-                      color="#1877f2"
-                      title="Facebook"
-                      isMobile={isMobile}
-                    />
+                    <SocialLink icon="fab fa-github"   link="https://github.com/bassem669"                             color="#333"     title="GitHub"   isMobile={isMobile} />
+                    <SocialLink icon="fab fa-linkedin" link="https://www.linkedin.com/in/bassem-mathlouthi-3abab6362/" color="#0077b5" title="LinkedIn" isMobile={isMobile} />
+                    <SocialLink icon="fab fa-facebook" link="https://www.facebook.com/bassam.mathlouthi.1"             color="#1877f2" title="Facebook" isMobile={isMobile} />
                   </div>
                 </div>
               </div>
             </div>
           </Col>
         </Row>
-
-        {/* Call to Action */}
-        <Row className="mt-4 mt-md-5 pt-3">
-          <Col>
-            <div className="glass-panel p-3 p-md-4 p-lg-5 rounded-4 text-center" style={{
-              background: 'rgba(30, 41, 59, 0.5)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(59, 130, 246, 0.2)'
-            }}>
-              <h4 className={`text-white mb-${isMobile ? '2' : '3'} ${isMobile ? 'h5' : ''}`}>
-                <i className={`fas fa-handshake ${isMobile ? 'me-2' : 'me-3'}`}></i>
-                Prêt à collaborer ?
-              </h4>
-              <p className="text-light opacity-90 mb-3 mb-md-4" style={{
-                maxWidth: '800px',
-                margin: '0 auto',
-                fontSize: isMobile ? '0.9rem' : '1.1rem',
-                lineHeight: '1.6'
-              }}>
-                Je suis actuellement à la recherche d'un <strong className="text-primary">Stage de Fin d'Études (PFE)</strong>
-                en développement Full-Stack. Si vous avez une opportunité intéressante, n'hésitez pas à me contacter !
-              </p>
-              <Button
-                href="mailto:bassemmathlouthi05@gmail.com"
-                size={isMobile ? 'md' : 'lg'}
-                className={`rounded-pill ${isMobile ? 'px-3 py-2' : 'px-4 py-3'}`}
-                style={{
-                  background: 'linear-gradient(45deg, #8b5cf6, #7c3aed)',
-                  border: 'none',
-                  fontWeight: 600,
-                  fontSize: isMobile ? '0.9rem' : '1rem'
-                }}
-              >
-                <i className="fas fa-envelope me-2"></i>
-                {isMobile ? 'Envoyer email' : 'Envoyer un email direct'}
-              </Button>
-            </div>
-          </Col>
-        </Row>
       </Container>
-
-      <style jsx="true">{`
-        .animate-on-scroll {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s ease;
-        }
-        .animate-on-scroll.animate-in {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .text-gradient {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        @media (min-width: 768px) {
-          .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            position: relative;
-            display: inline-block;
-          }
-          .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            border-radius: 2px;
-          }
-        }
-        .cursor-pointer {
-          cursor: pointer;
-        }
-        .form-control:focus {
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-          border-color: #3b82f6;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .custom-input::placeholder {
-          color: rgba(255, 255, 255, 0.5);
-          font-weight: 400;
-        }
-
-        /* Compatibilité navigateurs */
-        .custom-input::-webkit-input-placeholder {
-          color: rgba(255, 255, 255, 0.5);
-        }
-        .custom-input::-moz-placeholder {
-          color: rgba(255, 255, 255, 0.5);
-        }
-        .custom-input:-ms-input-placeholder {
-          color: rgba(255, 255, 255, 0.5);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 767px) {
-          .glass-panel {
-            margin: 0 -0.5rem;
-          }
-          .contact-item {
-            padding: 0.75rem !important;
-          }
-        }
-        
-        /* Touch-friendly adjustments */
-        @media (hover: none) {
-          .contact-item:hover {
-            transform: none !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-          }
-        }
-      `}</style>
     </section>
   );
 };
 
-// Composants auxiliaires
-const Badge = ({ children, className, style, ...props }) => {
-  return (
-    <span className={`badge ${className}`} style={style} {...props}>
-      {children}
-    </span>
-  );
-};
-
-const SocialLink = ({ icon, link, color, title, isMobile }) => {
-  return (
-    <a
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="rounded-circle d-flex align-items-center justify-content-center"
-      style={{
-        width: isMobile ? '36px' : '44px',
-        height: isMobile ? '36px' : '44px',
-        background: 'rgba(255, 255, 255, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        color: 'white',
-        fontSize: isMobile ? '0.9rem' : '1.1rem',
-        transition: isMobile ? 'none' : 'all 0.3s ease',
-        textDecoration: 'none'
-      }}
-      onMouseEnter={(e) => {
-        if (!isMobile) {
-          e.currentTarget.style.background = color;
-          e.currentTarget.style.transform = 'translateY(-3px) scale(1.1)';
-          e.currentTarget.style.boxShadow = `0 6px 20px ${color}50`;
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isMobile) {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.boxShadow = 'none';
-        }
-      }}
-      onTouchStart={(e) => {
-        if (isMobile) {
-          e.currentTarget.style.background = color;
-        }
-      }}
-      onTouchEnd={(e) => {
-        if (isMobile) {
-          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-        }
-      }}
-      title={title}
-    >
-      <i className={icon}></i>
-    </a>
-  );
-};
+const SocialLink = ({ icon, link, color, title, isMobile }) => (
+  <a
+    href={link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="rounded-circle d-flex align-items-center justify-content-center"
+    style={{
+      width: isMobile ? '36px' : '44px',
+      height: isMobile ? '36px' : '44px',
+      background: 'rgba(255, 255, 255, 0.1)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      color: 'white',
+      fontSize: isMobile ? '0.9rem' : '1.1rem',
+      transition: isMobile ? 'none' : 'all 0.3s ease',
+      textDecoration: 'none'
+    }}
+    onMouseEnter={(e) => {
+      if (!isMobile) {
+        e.currentTarget.style.background = color;
+        e.currentTarget.style.transform = 'translateY(-3px) scale(1.1)';
+        e.currentTarget.style.boxShadow = `0 6px 20px ${color}50`;
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (!isMobile) {
+        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+        e.currentTarget.style.boxShadow = 'none';
+      }
+    }}
+    onTouchStart={(e) => { if (isMobile) e.currentTarget.style.background = color; }}
+    onTouchEnd={(e)   => { if (isMobile) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; }}
+    title={title}
+  >
+    <i className={icon}></i>
+  </a>
+);
 
 export default Contact;

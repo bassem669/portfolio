@@ -1,43 +1,25 @@
-/* Fonts */
+/* ============================================================
+   FONTS
+   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
 :root {
-  /* Color Palette */
   --bg-dark: #0f172a;
   --bg-card: #1e293b;
   --text-primary: #ffffff;
   --text-secondary: #e2e8f0;
-  /* Lighter for better visibility */
   --primary: #38bdf8;
   --secondary: #818cf8;
   --accent: #f472b6;
   --border: #475569;
 }
 
-.navbar-glass {
-  background: rgba(15, 23, 42, 0.95) !important;
-  /* Almost solid dark */
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(10px);
-}
-
-/* Bootstrap Overrides */
-.text-muted {
-  color: var(--text-secondary) !important;
-}
-
-.text-secondary {
-  color: var(--text-secondary) !important;
-}
-
-.text-dark {
-  color: var(--text-primary) !important;
-}
-
-.bg-light {
-  background-color: var(--bg-card) !important;
-}
-
+/* ============================================================
+   BASE
+   ============================================================ */
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -47,25 +29,266 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code,
-pre {
+code, pre {
   font-family: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+/* ============================================================
+   BOOTSTRAP OVERRIDES
+   ============================================================ */
+.text-muted    { color: var(--text-secondary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-dark     { color: var(--text-primary) !important; }
+.bg-light      { background-color: var(--bg-card) !important; }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.cursor-pointer { cursor: pointer; }
+.transition-all { transition: all 0.3s ease; }
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+/* Navbar glass */
+.navbar-glass {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 5px;
+/* ============================================================
+   SECTION TITLES
+   ============================================================ */
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+/* ============================================================
+   SCROLL ANIMATIONS
+   ============================================================ */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+.animate-on-scroll.animate-in,
+.animate-on-scroll.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade variants (Hero) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes scroll-indicator {
+  0%   { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 0.5; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.particle { animation: float 20s infinite ease-in-out; }
+
+/* ============================================================
+   NAVBAR — Mobile menu
+   ============================================================ */
+.rounded-lg { border-radius: 8px; }
+
+@media (min-width: 992px) {
+  .rounded-lg-3 { border-radius: 50px !important; }
+}
+
+.navbar-collapse { transition: all 0.3s ease; }
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+  .navbar-nav { width: 100%; }
+}
+
+/* ============================================================
+   HERO — Responsive fonts
+   ============================================================ */
+@media (max-width: 768px) {
+  .display-5 { font-size: 2.5rem !important; }
+}
+@media (max-width: 576px) {
+  .display-5      { font-size: 2rem !important; }
+  .text-gradient  { font-size: 2rem !important; }
+}
+
+/* ============================================================
+   TECH CARDS (Skills)
+   ============================================================ */
+.tech-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+@media (min-width: 768px) {
+  .tech-card {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+    min-height: 150px;
+  }
+}
+@media (min-width: 992px) {
+  .tech-card:hover .tech-icon-wrapper {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+@media (hover: none) {
+  .tech-card:hover {
+    transform: none !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* ============================================================
+   CONTACT — Form inputs
+   ============================================================ */
+.custom-input::placeholder         { color: rgba(255, 255, 255, 0.5); font-weight: 400; }
+.custom-input::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.5); }
+.custom-input::-moz-placeholder        { color: rgba(255, 255, 255, 0.5); }
+.custom-input:-ms-input-placeholder    { color: rgba(255, 255, 255, 0.5); }
+
+.form-control:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+@media (hover: none) {
+  .contact-item:hover {
+    transform: none !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+}
+@media (max-width: 767px) {
+  .contact-item { padding: 0.75rem !important; }
+}
+
+/* ============================================================
+   ABOUT — Dev cards + Timeline
+   ============================================================ */
+@media (hover: none) {
+  .dev-card:hover {
+    transform: none !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+@media (max-width: 767px) {
+  .dev-card       { margin-bottom: 1rem; }
+  .timeline-item  { padding-left: 2rem !important; }
+  .glass-panel    { margin: 0 -1rem; }
+  .row-cols-2 > * { padding: 0 0.25rem; }
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: linear-gradient(180deg, #0f172a 0%, #1a2332 100%);
+  animation: fadeInUp 0.8s ease;
+}
+@media (max-width: 767px) {
+  footer .row-cols-1 > * {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  footer .row-cols-1 > *:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+@media (hover: none) {
+  a:hover    { transform: none !important; opacity: 0.75 !important; }
+  .btn:hover { transform: none !important; box-shadow: none !important; }
 }

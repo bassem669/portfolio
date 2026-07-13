@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
+import useScreenSize from '../hooks/useScreenSize';
 
 const About = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  const { isMobile, isTablet } = useScreenSize();
 
   useEffect(() => {
-    const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768;
-      const tablet = window.innerWidth >= 768 && window.innerWidth < 992;
-      setIsMobile(mobile);
-      setIsTablet(tablet);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    // Animation des éléments
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -29,11 +18,7 @@ const About = () => {
     );
 
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [isMobile]);
 
   const softSkills = [
@@ -74,14 +59,14 @@ const About = () => {
         background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         zIndex: 0
       }}>
-        {/* Grid pattern - Simplified on mobile */}
+        {/* Grid pattern */}
         <div className="position-absolute top-0 start-0 w-100 h-100" style={{
           backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
           backgroundSize: isMobile ? '30px 30px' : '50px 50px',
           opacity: isMobile ? 0.2 : 0.3
         }}></div>
 
-        {/* Decorative circles - Simplified on mobile */}
+        {/* Decorative circle */}
         <div style={{
           position: 'absolute',
           top: isMobile ? '5%' : '10%',
@@ -100,7 +85,6 @@ const About = () => {
           <Col>
             <div className="text-center mb-3 mb-md-4 animate-on-scroll">
               <Badge
-                bg="transparent"
                 className="mb-3 px-3 py-2 rounded-pill d-inline-flex align-items-center"
                 style={{
                   background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))',
@@ -113,7 +97,7 @@ const About = () => {
                 Mon Profil
               </Badge>
 
-              <h2 className={`text-white mb-3 mb-md-4 ${isMobile ? 'h3' : 'section-title'}`} 
+              <h2 className={`text-white mb-3 mb-md-4 ${isMobile ? 'h3' : 'section-title'}`}
                   style={isMobile ? { fontSize: '1.75rem' } : {}}>
                 À propos de <span className="text-gradient">moi</span>
               </h2>
@@ -147,8 +131,8 @@ const About = () => {
                 <i className="fas fa-star me-3"></i>
                 Mes Forces Personnelles
               </h3>
-              <p className="text-light opacity-75" style={{ 
-                maxWidth: '600px', 
+              <p className="text-light opacity-75" style={{
+                maxWidth: '600px',
                 margin: '0 auto',
                 fontSize: isMobile ? '0.9rem' : '1rem'
               }}>
@@ -185,7 +169,7 @@ const About = () => {
                   }
                 }}
               >
-                <div className={`d-flex ${isMobile ? 'align-items-start' : 'align-items-start'}`}>
+                <div className="d-flex align-items-start">
                   <div className={`rounded-circle p-2 p-md-3 ${isMobile ? 'me-3' : 'me-4'} d-flex align-items-center justify-content-center`}
                     style={{
                       background: skill.gradient,
@@ -198,7 +182,7 @@ const About = () => {
                   </div>
                   <div style={{ flex: 1 }}>
                     <h4 className={`text-white mb-2 mb-md-3 ${isMobile ? 'h5' : ''}`}>{skill.title}</h4>
-                    <p className="text-light opacity-90 mb-0" style={{ 
+                    <p className="text-light opacity-90 mb-0" style={{
                       lineHeight: '1.6',
                       fontSize: isMobile ? '0.9rem' : '1rem'
                     }}>
@@ -213,6 +197,7 @@ const About = () => {
 
         {/* Timeline Section */}
         <Row className={`${isMobile ? 'row-cols-1' : 'row-cols-1 row-cols-lg-2'} g-3 g-md-4`}>
+          {/* Academic */}
           <Col className="mb-3 mb-lg-0">
             <div className="animate-on-scroll">
               <div className="dev-card h-100 overflow-hidden"
@@ -244,96 +229,36 @@ const About = () => {
                   </h5>
                 </div>
                 <div className="p-3 p-md-4">
-                  <div className={`timeline-item mb-3 mb-md-4 ${isMobile ? 'ps-3' : 'ps-4'} position-relative`}>
-                    <div className="position-absolute start-0 top-0 bottom-0">
-                      <div style={{
-                        width: '2px',
-                        height: '100%',
-                        background: 'linear-gradient(to bottom, #3b82f6, #8b5cf6)',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          position: 'absolute',
-                          top: '0',
-                          left: '-6px',
-                          width: isMobile ? '12px' : '14px',
-                          height: isMobile ? '12px' : '14px',
-                          borderRadius: '50%',
-                          background: '#3b82f6',
-                          border: `3px solid ${isMobile ? '#1e293b' : '#1e293b'}`
-                        }}></div>
-                      </div>
-                    </div>
-                    <div className="mb-2 mb-md-3">
-                      <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between'} align-items-${isMobile ? 'start' : 'center'} mb-2`}>
-                        <h6 className={`text-white mb-${isMobile ? '1' : '0'} ${isMobile ? 'h6' : ''}`}>
-                          Licence en Technologies de l'Information
-                        </h6>
-                        <Badge className={`px-2 px-md-3 py-1 ${isMobile ? 'mt-1 mb-2' : ''}`} style={{
-                          background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                          border: 'none',
-                          fontSize: isMobile ? '0.75rem' : '0.875rem'
-                        }}>
-                          2024 - Présent
-                        </Badge>
-                      </div>
-                      <p className="text-light opacity-90 mb-0" style={{ 
-                        lineHeight: '1.6',
-                        fontSize: isMobile ? '0.85rem' : '0.9rem'
-                      }}>
-                        Formation axée sur le développement logiciel, les systèmes d'information,
-                        la gestion de bases de données et les technologies web modernes.
-                      </p>
-                    </div>
-                  </div>
+                  <TimelineItem
+                    title="Licence en Technologies de l'Information"
+                    period="2023 - 2026"
+                    badgeGradient="linear-gradient(45deg, #3b82f6, #8b5cf6)"
+                    lineGradient="linear-gradient(to bottom, #3b82f6, #8b5cf6)"
+                    dotColor="#3b82f6"
+                    isMobile={isMobile}
+                    className="mb-3 mb-md-4"
+                  >
+                    Formation axée sur le développement logiciel, les systèmes d'information,
+                    la gestion de bases de données et les technologies web modernes.
+                  </TimelineItem>
 
-                  <div className={`timeline-item ${isMobile ? 'ps-3' : 'ps-4'} position-relative`}>
-                    <div className="position-absolute start-0 top-0 bottom-0">
-                      <div style={{
-                        width: '2px',
-                        height: '100%',
-                        background: 'linear-gradient(to bottom, #8b5cf6, #ec4899)',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          position: 'absolute',
-                          top: '0',
-                          left: '-6px',
-                          width: isMobile ? '12px' : '14px',
-                          height: isMobile ? '12px' : '14px',
-                          borderRadius: '50%',
-                          background: '#8b5cf6',
-                          border: `3px solid ${isMobile ? '#1e293b' : '#1e293b'}`
-                        }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between'} align-items-${isMobile ? 'start' : 'center'} mb-2`}>
-                        <h6 className={`text-white mb-${isMobile ? '1' : '0'} ${isMobile ? 'h6' : ''}`}>
-                          Baccalauréat – Spécialité Technique
-                        </h6>
-                        <Badge className={`px-2 px-md-3 py-1 ${isMobile ? 'mt-1 mb-2' : ''}`} style={{
-                          background: 'linear-gradient(45deg, #8b5cf6, #ec4899)',
-                          border: 'none',
-                          fontSize: isMobile ? '0.75rem' : '0.875rem'
-                        }}>
-                          2023
-                        </Badge>
-                      </div>
-                      <p className="text-light opacity-90 mb-0" style={{ 
-                        lineHeight: '1.6',
-                        fontSize: isMobile ? '0.85rem' : '0.9rem'
-                      }}>
-                        Diplôme obtenu avec une moyenne de <strong className="text-primary">14.52</strong>.
-                        Spécialisation orientée vers les disciplines techniques.
-                      </p>
-                    </div>
-                  </div>
+                  <TimelineItem
+                    title="Baccalauréat – Spécialité Technique"
+                    period="2023"
+                    badgeGradient="linear-gradient(45deg, #8b5cf6, #ec4899)"
+                    lineGradient="linear-gradient(to bottom, #8b5cf6, #ec4899)"
+                    dotColor="#8b5cf6"
+                    isMobile={isMobile}
+                  >
+                    Diplôme obtenu avec une moyenne de <strong className="text-primary">14.59</strong>.
+                    Spécialisation orientée vers les disciplines techniques.
+                  </TimelineItem>
                 </div>
               </div>
             </div>
           </Col>
 
+          {/* Professional */}
           <Col>
             <div className="animate-on-scroll" style={{ animationDelay: '0.2s' }}>
               <div className="dev-card h-100 overflow-hidden"
@@ -365,209 +290,111 @@ const About = () => {
                   </h5>
                 </div>
                 <div className="p-3 p-md-4">
-                  <div className={`timeline-item mb-3 mb-md-4 ${isMobile ? 'ps-3' : 'ps-4'} position-relative`}>
-                    <div className="position-absolute start-0 top-0 bottom-0">
-                      <div style={{
-                        width: '2px',
-                        height: '100%',
-                        background: 'linear-gradient(to bottom, #10b981, #06b6d4)',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          position: 'absolute',
-                          top: '0',
-                          left: '-6px',
-                          width: isMobile ? '12px' : '14px',
-                          height: isMobile ? '12px' : '14px',
-                          borderRadius: '50%',
-                          background: '#10b981',
-                          border: `3px solid ${isMobile ? '#1e293b' : '#1e293b'}`
-                        }}></div>
-                      </div>
-                    </div>
-                    <div className="mb-2 mb-md-3">
-                      <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between'} align-items-${isMobile ? 'start' : 'center'} mb-2`}>
-                        <h6 className={`text-white mb-${isMobile ? '1' : '0'} ${isMobile ? 'h6' : ''}`}>
-                          Stage – Société Atomic IT Pro
-                        </h6>
-                        <Badge className={`px-2 px-md-3 py-1 ${isMobile ? 'mt-1 mb-2' : ''}`} style={{
-                          background: 'linear-gradient(45deg, #10b981, #06b6d4)',
-                          border: 'none',
-                          fontSize: isMobile ? '0.75rem' : '0.875rem'
-                        }}>
-                          Été 2025
-                        </Badge>
-                      </div>
-                      <ul className="list-unstyled text-light opacity-90 mb-0">
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Développement d'un site web dynamique pour la location et vente de maisons
-                          </span>
-                        </li>
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Intégration d'un module Machine Learning pour l'estimation des prix
-                          </span>
-                        </li>
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Développement d'API REST avec Django
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                  <TimelineItem
+                    title="Stage de Fin d'étude – Société Tunisie Telecom"
+                    period="02/2026 - 05/2026"
+                    badgeGradient="linear-gradient(45deg, #10b981, #06b6d4)"
+                    lineGradient="linear-gradient(to bottom, #10b981, #06b6d4)"
+                    dotColor="#10b981"
+                    isMobile={isMobile}
+                    className="mb-3 mb-md-4"
+                    bullets={[
+                      "Développement d'une plateforme web de gestion d'assurance maladie.",
+                      "Conception, gestion de bases de données et intégration de l'IA (Gemini) pour l'analyse de documents.",
+                      "Mise en place d'un système de détection de fraude par analyse statistique."
+                    ]}
+                  />
 
-                  <div className={`timeline-item ${isMobile ? 'ps-3' : 'ps-4'} position-relative`}>
-                    <div className="position-absolute start-0 top-0 bottom-0">
-                      <div style={{
-                        width: '2px',
-                        height: '100%',
-                        background: 'linear-gradient(to bottom, #06b6d4, #0ea5e9)',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          position: 'absolute',
-                          top: '0',
-                          left: '-6px',
-                          width: isMobile ? '12px' : '14px',
-                          height: isMobile ? '12px' : '14px',
-                          borderRadius: '50%',
-                          background: '#06b6d4',
-                          border: `3px solid ${isMobile ? '#1e293b' : '#1e293b'}`
-                        }}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between'} align-items-${isMobile ? 'start' : 'center'} mb-2`}>
-                        <h6 className={`text-white mb-${isMobile ? '1' : '0'} ${isMobile ? 'h6' : ''}`}>
-                          Stage – Société Yes Technologie
-                        </h6>
-                        <Badge className={`px-2 px-md-3 py-1 ${isMobile ? 'mt-1 mb-2' : ''}`} style={{
-                          background: 'linear-gradient(45deg, #06b6d4, #0ea5e9)',
-                          border: 'none',
-                          fontSize: isMobile ? '0.75rem' : '0.875rem'
-                        }}>
-                          2024
-                        </Badge>
-                      </div>
-                      <ul className="list-unstyled text-light opacity-90 mb-0">
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Réalisation de sites web statiques et interactifs
-                          </span>
-                        </li>
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Création d'interfaces modernes avec HTML, CSS, Bootstrap
-                          </span>
-                        </li>
-                        <li className="mb-1 mb-md-2 d-flex align-items-start">
-                          <i className={`fas fa-check-circle text-success ${isMobile ? 'me-2 mt-1' : 'me-2 mt-1'}`} 
-                             style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
-                          <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
-                            Adaptation aux besoins spécifiques des utilisateurs
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                  <TimelineItem
+                    title="Stage de Perfectionnement – Société Atomic IT Pro"
+                    period="06/2025 - 07/2025"
+                    badgeGradient="linear-gradient(45deg, #10b981, #06b6d4)"
+                    lineGradient="linear-gradient(to bottom, #10b981, #06b6d4)"
+                    dotColor="#10b981"
+                    isMobile={isMobile}
+                    className="mb-3 mb-md-4"
+                    bullets={[
+                      "Développement d'un site web dynamique pour la location et vente de maisons",
+                      "Intégration d'un module Machine Learning pour l'estimation des prix",
+                      "Développement d'API REST avec Django"
+                    ]}
+                  />
+
+                  <TimelineItem
+                    title="Stage d'Initiation – Société Yes Technologie"
+                    period="01/2024 - 02/2024"
+                    badgeGradient="linear-gradient(45deg, #06b6d4, #0ea5e9)"
+                    lineGradient="linear-gradient(to bottom, #06b6d4, #0ea5e9)"
+                    dotColor="#06b6d4"
+                    isMobile={isMobile}
+                    bullets={[
+                      "Réalisation de sites web statiques et interactifs",
+                      "Création d'interfaces modernes avec HTML, CSS, Bootstrap",
+                      "Adaptation aux besoins spécifiques des utilisateurs"
+                    ]}
+                  />
                 </div>
               </div>
             </div>
           </Col>
         </Row>
       </Container>
-
-      <style jsx="true">{`
-        .animate-on-scroll {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s ease;
-        }
-        .animate-on-scroll.animate-in {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .text-gradient {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        @media (min-width: 768px) {
-          .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            position: relative;
-            display: inline-block;
-          }
-          .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            border-radius: 2px;
-          }
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 767px) {
-          .dev-card {
-            margin-bottom: 1rem;
-          }
-          .timeline-item {
-            padding-left: 2rem !important;
-          }
-          .glass-panel {
-            margin: 0 -1rem;
-          }
-        }
-        
-        /* Touch-friendly adjustments */
-        @media (hover: none) {
-          .dev-card:hover {
-            transform: none !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
-          }
-        }
-      `}</style>
     </section>
   );
 };
 
-// Composant Badge personnalisé
-const Badge = ({ children, className, style, ...props }) => {
-  return (
-    <span className={`badge ${className}`} style={style} {...props}>
-      {children}
-    </span>
-  );
-};
+/* ── Sub-components ─────────────────────────────────────────── */
+
+const Badge = ({ children, className, style, ...props }) => (
+  <span className={`badge ${className}`} style={style} {...props}>
+    {children}
+  </span>
+);
+
+const TimelineItem = ({ title, period, badgeGradient, lineGradient, dotColor, isMobile, children, bullets, className = '' }) => (
+  <div className={`timeline-item ${isMobile ? 'ps-3' : 'ps-4'} position-relative ${className}`}>
+    <div className="position-absolute start-0 top-0 bottom-0">
+      <div style={{ width: '2px', height: '100%', background: lineGradient, position: 'relative' }}>
+        <div style={{
+          position: 'absolute',
+          top: '0',
+          left: '-6px',
+          width: isMobile ? '12px' : '14px',
+          height: isMobile ? '12px' : '14px',
+          borderRadius: '50%',
+          background: dotColor,
+          border: '3px solid #1e293b'
+        }}></div>
+      </div>
+    </div>
+    <div>
+      <div className={`d-flex ${isMobile ? 'flex-column' : 'justify-content-between'} align-items-${isMobile ? 'start' : 'center'} mb-2`}>
+        <h6 className={`text-white mb-${isMobile ? '1' : '0'}`}>{title}</h6>
+        <span className={`badge px-2 px-md-3 py-1 ${isMobile ? 'mt-1 mb-2' : ''}`} style={{
+          background: badgeGradient,
+          border: 'none',
+          fontSize: isMobile ? '0.75rem' : '0.875rem'
+        }}>
+          {period}
+        </span>
+      </div>
+      {children && (
+        <p className="text-light opacity-90 mb-0" style={{ lineHeight: '1.6', fontSize: isMobile ? '0.85rem' : '0.9rem' }}>
+          {children}
+        </p>
+      )}
+      {bullets && (
+        <ul className="list-unstyled text-light opacity-90 mb-0">
+          {bullets.map((b, i) => (
+            <li key={i} className="mb-1 mb-md-2 d-flex align-items-start">
+              <i className="fas fa-check-circle text-success me-2 mt-1" style={{ fontSize: isMobile ? '0.8rem' : '0.9rem' }}></i>
+              <span style={{ fontSize: isMobile ? '0.85rem' : '0.9rem' }}>{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+);
 
 export default About;

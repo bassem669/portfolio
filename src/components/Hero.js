@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
+import useScreenSize from '../hooks/useScreenSize';
 
 const Hero = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  const { isMobile, isTablet } = useScreenSize();
 
   useEffect(() => {
-    const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768;
-      const tablet = window.innerWidth >= 768 && window.innerWidth < 992;
-      setIsMobile(mobile);
-      setIsTablet(tablet);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    // Animation d'entrée
     const elements = document.querySelectorAll('.animate-on-scroll');
     const observer = new IntersectionObserver(
       (entries) => {
@@ -30,46 +19,26 @@ const Hero = () => {
     );
 
     elements.forEach(el => observer.observe(el));
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [isMobile]);
 
   const socialLinks = [
-    { 
-      icon: 'github', 
-      link: 'https://github.com/bassem669',
-      color: '#333',
-      hoverColor: '#4078c0'
-    },
-    { 
-      icon: 'linkedin', 
-      link: 'https://www.linkedin.com/in/bassem-mathlouthi-3abab6362/',
-      color: '#0077b5',
-      hoverColor: '#00a0dc'
-    },
-    { 
-      icon: 'facebook', 
-      link: 'https://www.facebook.com/bassam.mathlouthi.1',
-      color: '#1877f2',
-      hoverColor: '#3b5998'
-    }
+    { icon: 'github',   link: 'https://github.com/bassem669',                              color: '#333',    hoverColor: '#4078c0' },
+    { icon: 'linkedin', link: 'https://www.linkedin.com/in/bassem-mathlouthi-3abab6362/', color: '#0077b5', hoverColor: '#00a0dc' },
+    { icon: 'facebook', link: 'https://www.facebook.com/bassam.mathlouthi.1',             color: '#1877f2', hoverColor: '#3b5998' }
   ];
 
   const technologies = [
     { name: 'React.js', color: '#61dafb', bgColor: 'rgba(97, 218, 251, 0.1)' },
-    { name: 'Django', color: '#ff9900', bgColor: 'rgba(255, 153, 0, 0.1)' },
-    { name: 'MySQL', color: '#4479a1', bgColor: 'rgba(68, 121, 161, 0.1)' },
-    { name: 'JWT', color: '#d63aff', bgColor: 'rgba(214, 58, 255, 0.1)' },
-    { name: 'Python', color: '#3776ab', bgColor: 'rgba(55, 118, 171, 0.1)' }
+    { name: 'Django',   color: '#ff9900', bgColor: 'rgba(255, 153, 0, 0.1)' },
+    { name: 'MySQL',    color: '#4479a1', bgColor: 'rgba(68, 121, 161, 0.1)' },
+    { name: 'JWT',      color: '#d63aff', bgColor: 'rgba(214, 58, 255, 0.1)' },
+    { name: 'Python',   color: '#3776ab', bgColor: 'rgba(55, 118, 171, 0.1)' }
   ];
 
-  // Taille responsive pour l'image de profil
   const getProfileImageSize = () => {
-    if (isMobile) return 280;
-    if (isTablet) return 350;
+    if (isMobile)  return 280;
+    if (isTablet)  return 350;
     return 450;
   };
 
@@ -77,19 +46,15 @@ const Hero = () => {
     <section
       id="home"
       className="min-vh-100 d-flex align-items-center position-relative overflow-hidden"
-      style={{ 
+      style={{
         paddingTop: isMobile ? '70px' : '80px',
         paddingBottom: isMobile ? '50px' : '0',
         background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)'
       }}
     >
-      {/* Background Elements - Réduit sur mobile */}
+      {/* Background Elements */}
       <div className="position-absolute w-100 h-100 top-0 start-0">
-        <div className="position-absolute particles-container" style={{ 
-          width: '100%', 
-          height: '100%',
-          opacity: isMobile ? 0.4 : 0.6
-        }}>
+        <div className="position-absolute particles-container" style={{ width: '100%', height: '100%', opacity: isMobile ? 0.4 : 0.6 }}>
           {[...Array(isMobile ? 10 : 20)].map((_, i) => (
             <div
               key={i}
@@ -109,40 +74,37 @@ const Hero = () => {
           ))}
         </div>
 
-        {/* Effets de lumières - Réduits sur mobile */}
-        <div
-          style={{
-            position: 'absolute',
-            top: isMobile ? '5%' : '10%',
-            right: isMobile ? '5%' : '10%',
-            width: isMobile ? '200px' : (isTablet ? '300px' : '500px'),
-            height: isMobile ? '200px' : (isTablet ? '300px' : '500px'),
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)',
-            filter: `blur(${isMobile ? '40px' : '80px'})`,
-            zIndex: 0
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: isMobile ? '5%' : '10%',
-            left: isMobile ? '5%' : '10%',
-            width: isMobile ? '250px' : (isTablet ? '400px' : '600px'),
-            height: isMobile ? '250px' : (isTablet ? '400px' : '600px'),
-            background: 'radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, transparent 70%)',
-            filter: `blur(${isMobile ? '50px' : '100px'})`,
-            zIndex: 0
-          }}
-        />
+        {/* Light effects */}
+        <div style={{
+          position: 'absolute',
+          top: isMobile ? '5%' : '10%',
+          right: isMobile ? '5%' : '10%',
+          width: isMobile ? '200px' : (isTablet ? '300px' : '500px'),
+          height: isMobile ? '200px' : (isTablet ? '300px' : '500px'),
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)',
+          filter: `blur(${isMobile ? '40px' : '80px'})`,
+          zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: isMobile ? '5%' : '10%',
+          left: isMobile ? '5%' : '10%',
+          width: isMobile ? '250px' : (isTablet ? '400px' : '600px'),
+          height: isMobile ? '250px' : (isTablet ? '400px' : '600px'),
+          background: 'radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, transparent 70%)',
+          filter: `blur(${isMobile ? '50px' : '100px'})`,
+          zIndex: 0
+        }} />
       </div>
 
       <Container className="px-3 px-md-4 px-lg-5" style={{ position: 'relative', zIndex: 1 }}>
         <Row className="align-items-center">
+          {/* Text content */}
           <Col lg={6} className="order-lg-1 order-2">
             <div className={`pe-lg-5 ${isMobile ? 'text-center' : ''}`}>
               <div className="animate-on-scroll fade-in-up" style={{ animationDelay: '0.1s' }}>
-                <Badge 
-                  bg="transparent" 
+                <Badge
+                  bg="transparent"
                   className="mb-3 mb-md-4 px-3 py-2 rounded-pill d-inline-flex align-items-center"
                   style={{
                     background: 'linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))',
@@ -152,8 +114,7 @@ const Hero = () => {
                   }}
                 >
                   <div style={{
-                    width: '6px',
-                    height: '6px',
+                    width: '6px', height: '6px',
                     background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
                     borderRadius: '50%',
                     marginRight: isMobile ? '6px' : '10px',
@@ -165,20 +126,15 @@ const Hero = () => {
                   </span>
                 </Badge>
 
-                <h1 className={`fw-bold mb-3 mb-md-4 text-white animate-on-scroll fade-in-up ${isMobile ? 'display-5' : 'display-4'}`} 
-                    style={{ animationDelay: '0.2s' }}>
+                <h1
+                  className={`fw-bold mb-3 mb-md-4 text-white animate-on-scroll fade-in-up ${isMobile ? 'display-5' : 'display-4'}`}
+                  style={{ animationDelay: '0.2s' }}
+                >
                   {isMobile ? (
                     <>
                       Bonjour,<br />
                       je suis{' '}
-                      <span className="text-gradient d-block mt-2" style={{
-                        background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        fontSize: '2.5rem',
-                        lineHeight: '1.2'
-                      }}>
+                      <span className="text-gradient d-block mt-2" style={{ fontSize: '2.5rem', lineHeight: '1.2' }}>
                         Mathlouthi Bassem
                       </span>
                     </>
@@ -186,10 +142,6 @@ const Hero = () => {
                     <>
                       Bonjour, je suis{' '}
                       <div className="text-gradient mt-2" style={{
-                        background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
                         fontSize: isTablet ? '3rem' : '3.5rem',
                         display: 'inline-block',
                         lineHeight: '1.2'
@@ -200,23 +152,25 @@ const Hero = () => {
                   )}
                 </h1>
 
-                <p className="mb-4 mb-md-5 text-light animate-on-scroll fade-in-up" style={{ 
+                <p className="mb-4 mb-md-5 text-light animate-on-scroll fade-in-up" style={{
                   animationDelay: '0.3s',
                   fontSize: isMobile ? '1rem' : '1.1rem',
                   lineHeight: '1.7',
                   opacity: 0.9,
                   textAlign: isMobile ? 'center' : 'left'
                 }}>
-                  Passionné par le développement Full-Stack, je suis actuellement en dernière année de Licence en Technologies de l'Information à l'ISET Kélibia. Je recherche un{' '}
+                  Passionné par le développement Full-Stack, je suis actuellement en dernière année de Licence
+                  en Technologies de l'Information à l'ISET Kélibia. Je recherche un{' '}
                   <span className="fw-bold text-primary">Stage de Fin d'Études (PFE)</span>{' '}
                   pour mettre en pratique mes compétences et contribuer à des projets innovants.
                 </p>
 
+                {/* Tech stack */}
                 <div className="mb-4 mb-md-5 animate-on-scroll fade-in-up" style={{ animationDelay: '0.4s' }}>
-                  <h6 className={`text-uppercase mb-3 text-light ${isMobile ? 'text-center' : ''}`} style={{ 
-                    letterSpacing: isMobile ? '2px' : '3px', 
+                  <h6 className={`text-uppercase mb-3 text-light ${isMobile ? 'text-center' : ''}`} style={{
+                    letterSpacing: isMobile ? '2px' : '3px',
                     fontSize: isMobile ? '0.8rem' : '0.875rem',
-                    fontWeight: 600 
+                    fontWeight: 600
                   }}>
                     <i className="fas fa-cogs me-2"></i>
                     Stack Technique
@@ -249,8 +203,7 @@ const Hero = () => {
                         }}
                       >
                         <span style={{
-                          width: '5px',
-                          height: '5px',
+                          width: '5px', height: '5px',
                           background: tech.color,
                           borderRadius: '50%',
                           marginRight: isMobile ? '5px' : '8px',
@@ -262,7 +215,8 @@ const Hero = () => {
                   </div>
                 </div>
 
-                <div className={`d-flex flex-wrap gap-2 gap-md-3 mb-4 mb-md-5 animate-on-scroll fade-in-up ${isMobile ? 'justify-content-center' : ''}`} 
+                {/* CTA buttons */}
+                <div className={`d-flex flex-wrap gap-2 gap-md-3 mb-4 mb-md-5 animate-on-scroll fade-in-up ${isMobile ? 'justify-content-center' : ''}`}
                      style={{ animationDelay: '0.5s' }}>
                   <Button
                     href="#projets"
@@ -293,7 +247,7 @@ const Hero = () => {
                     <i className="fas fa-eye me-2"></i>
                     {isMobile ? 'Projets' : 'Voir mes projets'}
                   </Button>
-                  
+
                   <Button
                     href="/portfolio/assets/Bassem_Mathlouthi_CV.pdf"
                     target="_blank"
@@ -325,11 +279,12 @@ const Hero = () => {
                     }}
                   >
                     <i className="fas fa-download me-2"></i>
-                    {isMobile ? 'Télécharger CV' : 'Télécharger CV'}
+                    Télécharger CV
                   </Button>
                 </div>
 
-                <div className={`d-flex gap-3 gap-md-4 animate-on-scroll fade-in-up ${isMobile ? 'justify-content-center' : ''}`} 
+                {/* Social links */}
+                <div className={`d-flex gap-3 gap-md-4 animate-on-scroll fade-in-up ${isMobile ? 'justify-content-center' : ''}`}
                      style={{ animationDelay: '0.6s' }}>
                   {socialLinks.map((social, i) => (
                     <a
@@ -362,16 +317,8 @@ const Hero = () => {
                           e.currentTarget.style.boxShadow = 'none';
                         }
                       }}
-                      onTouchStart={(e) => {
-                        if (isMobile) {
-                          e.currentTarget.style.background = social.hoverColor;
-                        }
-                      }}
-                      onTouchEnd={(e) => {
-                        if (isMobile) {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                        }
-                      }}
+                      onTouchStart={(e) => { if (isMobile) e.currentTarget.style.background = social.hoverColor; }}
+                      onTouchEnd={(e)   => { if (isMobile) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; }}
                     >
                       <i className={`fab fa-${social.icon}`}></i>
                     </a>
@@ -381,15 +328,15 @@ const Hero = () => {
             </div>
           </Col>
 
+          {/* Profile image */}
           <Col lg={6} className="order-lg-2 order-1 mb-4 mb-lg-0">
             <div className={`animate-on-scroll fade-in ${isMobile ? 'mb-4' : ''}`} style={{ animationDelay: '0.8s' }}>
               <div className="position-relative d-inline-block">
-                {/* Cadre décoratif - Réduit sur mobile */}
+                {/* Rotating ring */}
                 {!isMobile && (
                   <div className="position-absolute top-50 start-50 translate-middle"
                     style={{
-                      width: '105%',
-                      height: '105%',
+                      width: '105%', height: '105%',
                       background: 'linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.2), transparent)',
                       borderRadius: '50%',
                       animation: 'rotate 20s linear infinite',
@@ -398,6 +345,7 @@ const Hero = () => {
                   ></div>
                 )}
 
+                {/* Photo */}
                 <div
                   className="rounded-circle overflow-hidden position-relative mx-auto"
                   style={{
@@ -405,9 +353,7 @@ const Hero = () => {
                     height: getProfileImageSize(),
                     maxWidth: '100%',
                     border: `2px solid rgba(255,255,255,${isMobile ? 0.05 : 0.1})`,
-                    boxShadow: isMobile 
-                      ? '0 10px 30px rgba(0, 0, 0, 0.2)'
-                      : '0 20px 60px rgba(0, 0, 0, 0.3)',
+                    boxShadow: isMobile ? '0 10px 30px rgba(0, 0, 0, 0.2)' : '0 20px 60px rgba(0, 0, 0, 0.3)',
                     zIndex: 1
                   }}
                 >
@@ -415,32 +361,23 @@ const Hero = () => {
                     src='/portfolio/assets/IMG20240829165954.jpg'
                     alt="Mathlouthi Bassem"
                     className="w-100 h-100 object-fit-cover profile-image"
-                    style={{ 
-                      objectFit: 'cover',
-                      filter: 'brightness(1.05) contrast(1.05)'
-                    }}
+                    style={{ objectFit: 'cover', filter: 'brightness(1.05) contrast(1.05)' }}
                     onError={(e) => {
                       e.target.style.display = 'none';
                       const fallback = e.target.nextSibling;
-                      if (fallback) {
-                        fallback.style.display = 'flex';
-                      }
+                      if (fallback) fallback.style.display = 'flex';
                     }}
                   />
-
                   {/* Fallback */}
                   <div
                     className="w-100 h-100 d-flex align-items-center justify-content-center"
-                    style={{ 
-                      display: 'none',
-                      background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)'
-                    }}
+                    style={{ display: 'none', background: 'linear-gradient(45deg, #3b82f6, #8b5cf6)' }}
                   >
                     <i className={`fas fa-user-astronaut ${isMobile ? 'fa-4x' : 'fa-6x'} text-white`}></i>
                   </div>
                 </div>
 
-                {/* Badge animé - Position et taille responsive */}
+                {/* Floating icon badge */}
                 {!isMobile && (
                   <div className="position-absolute bottom-0 end-0 translate-middle"
                     style={{
@@ -467,91 +404,33 @@ const Hero = () => {
         </Row>
       </Container>
 
-      {/* Scroll indicator - Seulement sur desktop */}
+      {/* Scroll indicator */}
       {!isMobile && (
         <div className="position-absolute bottom-0 start-50 translate-middle-x mb-4 animate-on-scroll fade-in"
           style={{ animationDelay: '1s', zIndex: 1 }}>
-          <div className="d-flex flex-column align-items-center text-light opacity-75"
+          <div
+            className="d-flex flex-column align-items-center text-light opacity-75"
             style={{ cursor: 'pointer' }}
-            onClick={() => document.getElementById('a-propos').scrollIntoView({ behavior: 'smooth' })}>
-            <span className="mb-2" style={{ fontSize: '0.9rem', fontWeight: 500 }}>
-              Scroll
-            </span>
+            onClick={() => document.getElementById('a-propos').scrollIntoView({ behavior: 'smooth' })}
+          >
+            <span className="mb-2" style={{ fontSize: '0.9rem', fontWeight: 500 }}>Scroll</span>
             <div style={{
-              width: '24px',
-              height: '40px',
+              width: '24px', height: '40px',
               border: '2px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '12px',
-              position: 'relative'
+              borderRadius: '12px', position: 'relative'
             }}>
               <div style={{
                 position: 'absolute',
-                width: '4px',
-                height: '10px',
-                background: 'white',
-                borderRadius: '2px',
-                left: '50%',
-                top: '8px',
+                width: '4px', height: '10px',
+                background: 'white', borderRadius: '2px',
+                left: '50%', top: '8px',
                 transform: 'translateX(-50%)',
-                animation: 'scroll 2s infinite'
+                animation: 'scroll-indicator 2s infinite'
               }}></div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Ajout des animations CSS */}
-      <style jsx="true">{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.1); }
-        }
-        @keyframes rotate {
-          from { transform: translate(-50%, -50%) rotate(0deg); }
-          to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        @keyframes scroll {
-          0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-          100% { transform: translateX(-50%) translateY(15px); opacity: 0; }
-        }
-        .fade-in {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: all 0.8s ease;
-        }
-        .fade-in-up {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.8s ease;
-        }
-        .animate-on-scroll.animated {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .particle {
-          animation: float 20s infinite ease-in-out;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .display-5 {
-            font-size: 2.5rem !important;
-          }
-        }
-        
-        @media (max-width: 576px) {
-          .display-5 {
-            font-size: 2rem !important;
-          }
-          .text-gradient {
-            font-size: 2rem !important;
-          }
-        }
-      `}</style>
     </section>
   );
 };
