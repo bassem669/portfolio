@@ -132,7 +132,7 @@ const projects = [
       "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
     ],
-    github: 'https://github.com/bassem669/Gestion_assurance_maladie'
+    github: 'https://github.com/KhefifiAmine/Gestion_assurance_maladie'
   }
 ];
 
